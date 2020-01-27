@@ -5,9 +5,9 @@ import Paper from '@material-ui/core/Paper'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import RecipeList from '../../components/RecipeList/RecipeList'
 import CookbookPreview from '../../components/CookbookPreview/CookbookPreview'
+import { getRecipes } from '../../services/api'
 import { notEmpty } from '../../utils/filter'
 import { Recipe } from '../../types/Recipe'
-import mock from './mock'
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -24,7 +24,10 @@ export default () => {
   const classes = useStyles()
 
   useEffect(() => {
-    setTimeout(() => { setRecipes(mock); setIsLoading(false) }, 300)
+    getRecipes().then(recipes => {
+      setRecipes(recipes)
+      setIsLoading(false)
+    })
   }, [])
 
   const handleRecipeSelection = (recipesId: string[]) => {
