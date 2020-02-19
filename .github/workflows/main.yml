@@ -43,10 +43,10 @@ jobs:
     - run: npm run test:ci
 
     - name: Upload test result
-    uses: actions/upload-artifact@v1
-    with:
-      name: junit.xml
-      path: junit.xml
+      uses: actions/upload-artifact@v1
+      with:
+        name: junit.xml
+        path: junit.xml
 
   build-docker-image: 
     runs-on: ubuntu-latest  
