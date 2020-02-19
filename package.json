@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:ci": "CI=true react-scripts test"
+    "test:ci": "CI=true react-scripts test --reporters=jest-junit"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -44,11 +44,17 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "coverageReporters": [
+      "jest-junit"
+    ]
+  },
   "devDependencies": {
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
     "@types/react-router-dom": "^5.1.3",
     "@types/sumo-logger": "^1.6.1",
-    "@types/uuid": "^3.4.6"
+    "@types/uuid": "^3.4.6",
+    "jest-junit": "^10.0.0"
   }
 }
