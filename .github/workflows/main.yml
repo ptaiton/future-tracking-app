@@ -77,10 +77,11 @@ jobs:
       with:
         repository: 'ptaiton/kubernetes-job-definitions'
         path: 'kustomize'
-    - run: |
-      ls
-      mv ./kustomize/future-tracking-app/* ./
-      ls
+    - name: Get kustomize project settings
+      run: |
+        ls
+        mv ./kustomize/future-tracking-app/* ./
+        ls
     - name: Set up Kustomize
       run: |
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
