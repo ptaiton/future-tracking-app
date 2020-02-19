@@ -6,6 +6,7 @@ on:
       - master
  
 env:
+  REACT_APP_SUMOLOGIC_ENDPOINT_URL: ${{ secrets.REACT_APP_SUMOLOGIC_ENDPOINT_URL }}
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: future-tracking-app-cluster
   GKE_ZONE: europe-west1-b
