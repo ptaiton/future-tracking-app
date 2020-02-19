@@ -34,7 +34,7 @@ jobs:
       with:
         node-version: '10.x'
     - run: npm install
-    - run: npm build
+    - run: npm run build
 
     - name: Upload build output directory
       uses: actions/upload-artifact@v1
@@ -52,7 +52,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '10.x'
-    - run: npm test
+    - run: npm run test
 
   build-docker-image: 
     runs-on: ubuntu-latest  
