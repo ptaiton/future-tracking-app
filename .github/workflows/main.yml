@@ -8,7 +8,7 @@ on:
 env:
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: future-tracking-app-cluster
-  GKE_ZONE: us-central1-f
+  GKE_ZONE: europe-west1-b
   IMAGE: future-tracking-app
 
 jobs:
