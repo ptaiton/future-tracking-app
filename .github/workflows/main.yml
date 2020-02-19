@@ -1,4 +1,4 @@
-name: Build Maven projet and deploy on Kube
+name: Build CRA Project and deploy to kube
  
 on:
   push:
