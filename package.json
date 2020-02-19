@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:ci": "react-scripts test --no-watchman"
+    "test:ci": "CI=true react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
