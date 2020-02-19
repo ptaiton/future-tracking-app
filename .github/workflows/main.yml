@@ -1,0 +1,96 @@
+name: Build Maven projet and deploy on Kube
+ 
+on:
+  push:
+    branches:
+      - master
+ 
+env:
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: future-tracking-app-cluster
+  GKE_ZONE: us-central1-f
+  IMAGE: future-tracking-app
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build CRA typescript project
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - run: npm install
+    - run: npm build
+
+    - name: Upload build output directory
+      uses: actions/upload-artifact@v1
+      with:
+        name: build
+        path: build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    name: Run tests
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - run: npm test
+
+  build-docker-image: 
+    runs-on: ubuntu-latest  
+    needs: test 
+    name: Build and push Docker container
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download build CRA output
+      uses: actions/download-artifact@v1
+      with:
+        name: build
+    - name: Build Docker container
+      run: |
+        docker build -t future-tracking-app . --tag gcr.io/$GKE_PROJECT/$IMAGE
+    - name: install python-openssl
+      run: sudo apt-get install -y python-openssl -o=Dpkg::Use-Pty=0
+    - name: Setup gcloud environment
+      uses: GoogleCloudPlatform/github-actions@0.1.1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+    - run: |
+        gcloud auth configure-docker
+    - name: Publish
+      run: |
+        docker push gcr.io/$GKE_PROJECT/$IMAGE
+        
+  deploy-to-kubernetes:
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+    name: Deploy to kubernetes
+    steps:
+    - name: Set up Kustomize
+      run: |
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+    - name: Deploy
+      run: |
+        gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image gcr.io/GKE_PROJECT/IMAGE=gcr.io/$GKE_PROJECT/$IMAGE
+        ./kustomize build . | kubectl apply -f -
+        kubectl get services -o wide
