@@ -12,6 +12,16 @@ env:
   IMAGE: future-tracking-app
 
 jobs:
+  sonarcloud-analysis:
+    name: SonarCloud Trigger
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   build:
     runs-on: ubuntu-latest
     name: Build CRA typescript project
