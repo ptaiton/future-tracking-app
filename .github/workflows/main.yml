@@ -55,7 +55,7 @@ jobs:
         name: build
     - name: Build Docker container
       run: |
-        docker build -t future-tracking-app . --tag gcr.io/$GKE_PROJECT/$IMAGE
+        docker build -t future-tracking-app ./prod.Dockerfile --tag gcr.io/$GKE_PROJECT/$IMAGE
     - name: install python-openssl
       run: sudo apt-get install -y python-openssl -o=Dpkg::Use-Pty=0
     - name: Setup gcloud environment
