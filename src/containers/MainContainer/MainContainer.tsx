@@ -7,7 +7,6 @@ import List from '@material-ui/core/List'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import GeneratePdfIcon from '@material-ui/icons/PictureAsPdf'
-import AddRecipeIcon from '@material-ui/icons/AddToPhotos'
 import ViewRecipesIcon from '@material-ui/icons/MenuBook'
 import ListItemLink from '../../components/ListItemLink/ListItemLink'
 
@@ -59,7 +58,6 @@ export default ({ children }: Props) => {
         <div className={classes.toolbar} />
         <List>
           <ListItemLink primary="View recipes" to="/" icon={<ViewRecipesIcon />} />
-          <ListItemLink primary="Add recipe" to="/add-recipe" icon={<AddRecipeIcon />} />
           <ListItemLink primary="Generate a Cookbook" to="/generate-cookbook" icon={<GeneratePdfIcon />} />
         </List>
       </Drawer>

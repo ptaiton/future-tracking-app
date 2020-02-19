@@ -1,6 +1,7 @@
 import axios from 'axios'
 import mock from './mock'
 import { Ingredient, Step, Recipe } from '../types/Recipe'
+import { log } from './log'
 
 interface RawRecipe {
   id: string
@@ -14,12 +15,14 @@ interface RawRecipe {
 const BASE_URL = 'http://localhost:8080'
 
 export const get = <T>(path: string) => {
+  log(`Request to ${path}`)
   return axios
     .get<T>(`${BASE_URL}/${path}`)
     .then(response => response.data)
 }
 
 export const post = <T>(path: string, payload: any) => {
+  log(`Request to ${path}`)
   return axios
     .post<T>(`${BASE_URL}/${path}`, payload)
     .then(response => response.data)

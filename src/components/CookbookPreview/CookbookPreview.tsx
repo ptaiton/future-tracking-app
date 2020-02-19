@@ -46,7 +46,10 @@ export default ({ recipes, handleRecipeUpdate }: Props) => {
   }
 
   const handleGenerateCookbookButtonClick = () => {
-    post('cookbook', recipes)
+    post('cookbook', {
+      title,
+      recipes: recipes.map(recipe => recipe.id)
+    })
   }
 
   const onDrop: OnDropCallback = ({ removedIndex, addedIndex }) => {
@@ -87,7 +90,7 @@ export default ({ recipes, handleRecipeUpdate }: Props) => {
       </List>
       </fieldset>
       <div className={classes.generateButton}>
-        <Button onClick={handleGenerateCookbookButtonClick}>
+        <Button onClick={handleGenerateCookbookButtonClick} disabled={!recipes.length || !title}>
           Generate my cookbook
         </Button>
       </div>

@@ -34,11 +34,15 @@ export default ({ recipes, selectedRecipes, handleRecipeSelection }: Props) => {
     return Boolean(selectedRecipes.find(selectedRecipeId => selectedRecipeId === recipeId))
   }
 
+  const handleCheckAll = () => {
+    handleRecipeSelection(recipes.length === selectedRecipes.length ? [] : [...recipes.map(recipe => recipe.id)])
+  }
+
   return (
     <div>
       <Typography variant="h6">All recipies</Typography>
       <List className={classes.root}>
-        <Button variant="text">Check all</Button>
+        <Button variant="text" onClick={handleCheckAll}>{recipes.length === selectedRecipes.length ? 'Uncheck All' : 'Check all'}</Button>
         {recipes.map(recipe => (
           <RecipeItem
           key={recipe.id}
