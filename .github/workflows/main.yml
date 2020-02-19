@@ -49,21 +49,25 @@ jobs:
     name: Build and push Docker container
     steps:
     - uses: actions/checkout@v1
+
     - name: Download build CRA output
       uses: actions/download-artifact@v1
       with:
         name: build
+
     - name: Build Docker container
-      run: |
-        docker build -f prod.Dockerfile -t future-tracking-app . --tag gcr.io/$GKE_PROJECT/$IMAGE
+      run: docker build -f prod.Dockerfile -t future-tracking-app . --tag gcr.io/$GKE_PROJECT/$IMAGE
+
     - name: install python-openssl
       run: sudo apt-get install -y python-openssl -o=Dpkg::Use-Pty=0
+
     - name: Setup gcloud environment
       uses: GoogleCloudPlatform/github-actions@0.1.1
       with:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
     - run: |
         gcloud auth configure-docker
+
     - name: Publish
       run: |
         docker push gcr.io/$GKE_PROJECT/$IMAGE
@@ -73,16 +77,24 @@ jobs:
     needs: build-docker-image
     name: Deploy to kubernetes
     steps:
+    - name: Setup gcloud environment
+      uses: GoogleCloudPlatform/github-actions@0.1.1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+
     - uses: actions/checkout@v2
       with:
         repository: 'ptaiton/kubernetes-job-definitions'
         path: 'kustomize-settings'
+
     - name: Get kustomize project settings
       run: mv ./kustomize-settings/future-tracking-app/* ./
+
     - name: Set up Kustomize
       run: |
         curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
+
     - name: Deploy
       run: |
         gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
