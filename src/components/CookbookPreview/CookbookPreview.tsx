@@ -10,7 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
 import DragHandleIcon from "@material-ui/icons/DragHandle"
-import { post } from '../../services/api'
+import { generateCookbook } from '../../services/api'
 import { Recipe } from '../../types/Recipe'
 
 const useStyles = makeStyles((theme: Theme) => 
@@ -46,10 +46,7 @@ export default ({ recipes, handleRecipeUpdate }: Props) => {
   }
 
   const handleGenerateCookbookButtonClick = () => {
-    post('cookbook', {
-      title,
-      recipes: recipes.map(recipe => recipe.id)
-    })
+    generateCookbook(recipes.map(recipe => recipe.id), title)
   }
 
   const onDrop: OnDropCallback = ({ removedIndex, addedIndex }) => {

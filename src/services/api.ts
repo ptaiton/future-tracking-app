@@ -1,7 +1,5 @@
-import axios from 'axios'
-import mock from './mock'
+import { get, post } from '../utils/request'
 import { Ingredient, Step, Recipe } from '../types/Recipe'
-import { log } from './log'
 
 interface RawRecipe {
   id: string
@@ -12,25 +10,7 @@ interface RawRecipe {
   steps: Step[]
 }
 
-const BASE_URL = 'http://localhost:8080'
-
-export const get = <T>(path: string) => {
-  log(`Request to ${path}`)
-  return axios
-    .get<T>(`${BASE_URL}/${path}`)
-    .then(response => response.data)
-}
-
-export const post = <T>(path: string, payload: any) => {
-  log(`Request to ${path}`)
-  return axios
-    .post<T>(`${BASE_URL}/${path}`, payload)
-    .then(response => response.data)
-}
-
 export const getRecipes = (): Promise<Recipe[]> => {
-  const get = <T>(_: string) => new Promise<RawRecipe[]>((resolve, reject) => setTimeout(() => resolve(mock), 200))
-
   return get<RawRecipe[]>('recipes')
     .then(recipes => recipes.map(recipe => {
       const ingredients = recipe.ingredients.reduce((ingredients, ingredient) => ({
@@ -45,4 +25,13 @@ export const getRecipes = (): Promise<Recipe[]> => {
 
       return { ...recipe, ingredients, steps }
     }))
+}
+
+export const generateCookbook = (recipeIds: string[], title: string) => {
+  return post<Blob>('cookbook', { title, recipeIds }, {
+    responseType: 'blob'
+  }).then((pdf) => {
+    const fileURL = URL.createObjectURL(pdf);
+    window.open(fileURL);
+  })
 }
